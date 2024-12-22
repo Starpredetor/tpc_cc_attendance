@@ -1,21 +1,19 @@
 from flask import Flask, request, render_template, redirect, url_for, send_file, flash
-import openpyxl
-import os
-from werkzeug.utils import secure_filename
 import re
-from excel_handler import add_attendance
+from excel_handler import add_attendance, generate_new_attendance_workbook
 
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 
 
-
-@app.route('/')
+#main home route
+@app.route('/', methods=['GET', 'POST'])
 def home():
     return render_template('home.html')
 
-
+        
+#handler for marking attendance
 @app.route('/mark_attendance', methods=['GET', 'POST'])
 def mark_attendance():
     error_message = None
@@ -30,10 +28,28 @@ def mark_attendance():
             error_message = "Invalid roll number format."
         else:
             roll_number = submitted_text
-            success_message = add_attendance(roll_number)
+            if add_attendance(roll_number) == 0:
+                error_message = f"Roll number {roll_number} not found in the attendance sheet."
+            else:
+                success_message = f"Attendance marked for roll number {roll_number}"
 
     return render_template('mark_attendance.html', error_message=error_message, success_message=success_message)
 
+
+
+#Handler for Creation of new workbook
+@app.route('/handler', methods=['POST'])
+def handler():
+    action = request.form.get('action')
+    if action == 'create_attendance_sheet':
+        message = None
+        if request.method == 'POST':
+           res = generate_new_attendance_workbook()
+        if res == 0:
+            return render_template('home.html', error_message="Sheet already created for today.") 
+        else:
+            return render_template('home.html', success_message=f"Attendance sheet created successfully with the name {res}")
+            
 
 
 if __name__ == '__main__':
