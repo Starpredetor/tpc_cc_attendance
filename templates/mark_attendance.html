@@ -57,6 +57,14 @@
         <form method="post" action="/mark_attendance">
             <label for="text">Enter Roll Number:</label><br>
             <input type="text" id="text" name="text"><br>
+            <label style="display: inline-flex; align-items: center;">
+                <input type="checkbox" name="session" value="Morning" checked>
+                 Morning 
+            </label>
+            <label style="display: inline-flex; align-items: center; p: 10px;">
+                <input type="checkbox" name="session" value="Afternoon" checked>
+                 Afternoon 
+            </label>
             <button type="submit">Submit</button>
             {% if error_message %}
                 <div class="error">{{ error_message }}</div>

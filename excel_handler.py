@@ -27,7 +27,7 @@ def get_session():
     else:
         return 'E'
 
-def add_attendance(roll_number: str):
+def add_attendance(roll_number: str, session: int = 3):
     if not os.path.exists(current_workbook):
         raise "Attendance workbook not found. Please generate a new attendance workbook."
         
@@ -35,19 +35,29 @@ def add_attendance(roll_number: str):
     marked = False
 
     sheets = wb.sheetnames
-    session = get_session()
     
     for sheet_name in sheets:
         ws = wb[sheet_name]
         for row in ws.iter_rows(min_row=2): 
-                if row[2].value.lower() == roll_number.lower():
-                    if session == 'M':  
+                if row[2].value == roll_number:
+                    if session == 1:
+                        ws.cell(row=row[0].row, column=4, value="P")    # Morning column
+                        ws.cell(row=row[0].row, column=5, value="A")    # Evening column
+                        print(f"Roll number {roll_number} marked present for morning session.")
+                        marked = True
+                        break
+                    elif session == 2:
+                        ws.cell(row=row[0].row, column=4, value="A")    # Morning column
+                        ws.cell(row=row[0].row, column=5, value="P")    #evening column
+                        print(f"Roll number {roll_number} marked present for evening session.")
+                        marked = True
+                        break
+                    else:
                         ws.cell(row=row[0].row, column=4, value="P")  # Morning column
                         ws.cell(row=row[0].row, column=5, value="P")  # Evening column
-                    else:
-                        ws.cell(row=row[0].row, column=5, value="P")  # Evening column
-                    marked = True
-                    break  
+                        print(f"Roll number {roll_number} marked present for both sessions.")
+                        marked = True
+                        break  
     
     if not marked:
         logging.error(f"Roll number {roll_number} not found in the attendance sheet.")
@@ -103,11 +113,12 @@ def add_conditional_formatting():
     return "Conditional formatting added"
 
 if __name__ == '__main__':
-    print(generate_new_attendance_workbook())
-    print(add_attendance('22CE1021'))
-    print(add_attendance('22CE1050'))
-    print(add_attendance('22CB1083'))
-    print(add_attendance('22CB1019'))
-    print(add_attendance('23CE1017'))
-    print(mark_absent())
-    print(add_conditional_formatting())
+    #print(generate_new_attendance_workbook())
+    #print(add_attendance('22CE1021'))
+    #print(add_attendance('22CE1050'))
+    #print(add_attendance('22CB1083'))
+    #print(add_attendance('22CB1019'))
+    #print(add_attendance('23CE1017'))
+    #print(mark_absent())
+    #print(add_conditional_formatting())
+    pass
