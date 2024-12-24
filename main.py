@@ -18,21 +18,37 @@ def home():
 def mark_attendance():
     error_message = None
     success_message = None
-
+    
     if request.method == 'POST':
         submitted_text = request.form['text']
-
+        session = request.form.getlist('session')
+        print(session)
+        #session check
+        if not session:
+            error_message = "Please select at least one session."
+            return render_template('mark_attendance.html', error_message=error_message, success_message=success_message)
+        ses = 3
+        
+        if len(session) == 1:
+            if session[0] == 'Morning':
+                ses = 1
+            elif session[0] == 'Afternoon':
+                ses = 2
+        else:
+            ses = 3
+        print(ses)
+        # Roll number validation
         if not submitted_text.strip():
             error_message = "Input cannot be empty."
         elif not re.match(r'^(22|23)[A-Z]{2}\d{4}$', submitted_text):
             error_message = "Invalid roll number format."
         else:
             roll_number = submitted_text
-            if add_attendance(roll_number) == 0:
+            if add_attendance(roll_number, session=ses) == 0:
                 error_message = f"Roll number {roll_number} not found in the attendance sheet."
             else:
                 success_message = f"Attendance marked for roll number {roll_number}"
-
+    
     return render_template('mark_attendance.html', error_message=error_message, success_message=success_message)
 
 
