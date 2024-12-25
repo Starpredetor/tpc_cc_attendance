@@ -36,7 +36,6 @@ def mark_attendance():
                 ses = 2
         else:
             ses = 3
-        print(ses)
         # Roll number validation
         if not submitted_text.strip():
             error_message = "Input cannot be empty."

@@ -43,24 +43,24 @@ def add_attendance(roll_number: str, session: int = 3):
                     if session == 1:
                         ws.cell(row=row[0].row, column=4, value="P")    # Morning column
                         ws.cell(row=row[0].row, column=5, value="A")    # Evening column
-                        print(f"Roll number {roll_number} marked present for morning session.")
+                        print('\033[92m'+f"Roll number {roll_number} marked present ONLY for MORNING session."+'\033[0m')
                         marked = True
                         break
                     elif session == 2:
                         ws.cell(row=row[0].row, column=4, value="A")    # Morning column
                         ws.cell(row=row[0].row, column=5, value="P")    #evening column
-                        print(f"Roll number {roll_number} marked present for evening session.")
+                        print('\033[92m'+f"Roll number {roll_number} marked present ONLY for AFTERNOON session."+ '\033[0m')
                         marked = True
                         break
                     else:
                         ws.cell(row=row[0].row, column=4, value="P")  # Morning column
                         ws.cell(row=row[0].row, column=5, value="P")  # Evening column
-                        print(f"Roll number {roll_number} marked present for both sessions.")
+                        print('\033[92m'+f"Roll number {roll_number} marked present for BOTH sessions."+'\033[0m')
                         marked = True
                         break  
     
     if not marked:
-        logging.error(f"Roll number {roll_number} not found in the attendance sheet.")
+        print('\033[91m'+"Roll number not found in the attendance sheet."+ '\033[0m')
         return 0
     
     
